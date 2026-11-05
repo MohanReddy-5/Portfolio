@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141424"/>
+      <stop offset="100%" stop-color="#07070c"/>
+    </linearGradient>
+    <linearGradient id="border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="60%" stop-color="#6840ff"/>
+      <stop offset="100%" stop-color="#a1ff62"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#eeeeff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle badge container matching portfolio monogram aesthetic -->
+  <rect x="2.5" y="2.5" width="59" height="59" rx="15" fill="url(#bg)" stroke="url(#border)" stroke-width="2.5"/>
+
+  <!-- MR monogram typography -->
+  <text 
+    x="32" 
+    y="41.5" 
+    text-anchor="middle" 
+    fill="url(#textGrad)" 
+    font-family="'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif" 
+    font-size="27" 
+    font-weight="700" 
+    letter-spacing="-0.03em"
+  >MR</text>
+
+  <!-- Subtle electric volt accent dot in the top corner -->
+  <circle cx="50" cy="14" r="2.75" fill="#a1ff62"/>
+</svg>

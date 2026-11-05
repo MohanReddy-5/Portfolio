@@ -1,0 +1,606 @@
+@import "tailwindcss";
+
+/* ════════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Mohan Reddy Portfolio
+   
+   Synthesized from two primary references:
+   • Osmo  — brutalist editorial, concrete canvas, compressed display type,
+              volt lime + ultraviolet + vermillion, sharp 2–5px tiles / 
+              extreme 1600px pill buttons, negative tracking at display sizes
+   • Antimetal — editorial print conventions, dashed hairline dividers,
+                  liquid-glass navigation, monospace section markers (no numbers),
+                  generous breathing room, warmth layering without harsh contrast
+   
+   Token palette already matches Osmo exactly: volt/ultraviolet/vermillion.
+   Editorial conventions borrowed selectively from Antimetal.
+   Both adapted into an original, cohesive system for this portfolio.
+════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Osmo Exact Color Palette ── */
+  --color-concrete: #f4f4f2;        /* page canvas — warm concrete */
+  --color-linen-canvas: #f5f3f0;    /* hero bg — warm linen, slightly warmer than concrete */
+  --color-paper-white: #ffffff;
+  --color-ash: #eaeaea;
+  --color-smoke: #b8b8b8;
+  --color-stone: #6e6a69;
+  --color-graphite: #4f4c4c;
+  --color-charcoal: #312e2e;
+  --color-ink: #201d1d;
+  --color-obsidian: #151313;
+  --color-volt: #a1ff62;            /* primary brand accent — Osmo exact */
+  --color-ultraviolet: #6840ff;     /* featured card surface — Osmo exact */
+  --color-vermillion: #f84131;      /* annotation accent — Osmo exact */
+
+  /* ── Typography — using available system fonts that best approximate the references ── */
+  /* Display: Space Grotesk ≈ Haffer XH (compressed grotesque) */
+  /* Body: Outfit ≈ Haffer VF (neutral grotesque) */
+  /* Mono: JetBrains Mono ≈ Haffer Mono / Geist Mono */
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Radius — Osmo's sharp/extreme split ── */
+  --radius-sharp: 2px;
+  --radius-tile: 5px;
+  --radius-cards: 5px;
+  --radius-buttons: 1600px;
+  --radius-badges: 1600px;
+  --radius-nav: 1600px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Color Tokens ── */
+  --color-concrete: #f4f4f2;
+  --color-linen-canvas: #f5f3f0;
+  --color-paper-white: #ffffff;
+  --color-ash: #eaeaea;
+  --color-smoke: #b8b8b8;
+  --color-stone: #6e6a69;
+  --color-graphite: #4f4c4c;
+  --color-charcoal: #312e2e;
+  --color-ink: #201d1d;
+  --color-obsidian: #151313;
+  --color-volt: #a1ff62;
+  --color-ultraviolet: #6840ff;
+  --color-vermillion: #f84131;
+
+  /* ── Section Backgrounds ── */
+  --bg-light: #f5f3f0;
+  --bg-dark-1: #060606;
+  --bg-dark-2: #0d0d12;
+  --bg-dark-edu: #07070f;
+  --bg-dark-exp: #060606;
+
+  /* ── Typography ── */
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Radius — Osmo's two-family system ── */
+  --radius-sharp: 2px;       /* tiles, dividers */
+  --radius-tile: 5px;        /* cards, inputs */
+  --radius-cards: 5px;
+  --radius-buttons: 1600px;  /* all buttons, pills */
+  --radius-badges: 1600px;
+  --radius-nav: 1600px;
+
+  /* ── Layout ── */
+  --page-max-width: 1240px;
+  --section-gap: 100px;
+  --section-padding: 0 32px;
+}
+
+/* ─── Smooth scrolling & resets ─── */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-light);
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-light);
+  color: var(--color-ink);
+  overflow-x: hidden;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+}
+
+::selection {
+  background: var(--color-volt);
+  color: var(--color-ink);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 13, 13, 0.22);
+  border-radius: 999px;
+}
+
+/* ─── Typography Utility Classes ─── */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+.font-body {
+  font-family: var(--font-body);
+  letter-spacing: -0.005em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* ─── Osmo Display Typography — compressed heading rhythm ─── */
+/* Applied at clamp breakpoints for all large headings:
+   Osmo: lh 0.85–0.95, tracking -0.04em to -0.06em at 80–150px
+   We apply this spirit: tight leading, aggressive negative tracking */
+.display-compressed {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.052em;
+}
+
+/* ─── Antimetal Dashed Divider — signature hairline treatment ─── */
+.hairline-dash {
+  border: none;
+  border-top: 1px dashed rgba(32, 29, 29, 0.12);
+  width: 100%;
+}
+
+/* ─── Top Scroll Progress Bar ─── */
+#scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6840ff, #a1ff62);
+  z-index: 999999;
+  transition: width 0.08s linear;
+  box-shadow: 0 0 8px rgba(161, 255, 98, 0.45);
+}
+
+/* ─── Custom Interactive Cursor ─── */
+#cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: #a1ff62;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease;
+  mix-blend-mode: difference;
+}
+
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(161, 255, 98, 0.55);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease;
+  mix-blend-mode: difference;
+}
+
+#cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(161, 255, 98, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99997;
+  transform: translate(-50%, -50%);
+  filter: blur(20px);
+}
+
+/* ─── Floating Polaroid / Tile Animations ─── */
+@keyframes float-tile-1 {
+  0%, 100% { transform: translateY(0px) rotate(-8deg); }
+  50%       { transform: translateY(-14px) rotate(-6deg); }
+}
+@keyframes float-tile-2 {
+  0%, 100% { transform: translateY(0px) rotate(6deg); }
+  50%       { transform: translateY(-18px) rotate(8deg); }
+}
+@keyframes float-tile-3 {
+  0%, 100% { transform: translateY(0px) rotate(-3deg); }
+  50%       { transform: translateY(-10px) rotate(-5deg); }
+}
+@keyframes float-tile-4 {
+  0%, 100% { transform: translateY(0px) rotate(10deg); }
+  50%       { transform: translateY(-12px) rotate(12deg); }
+}
+
+.float-tile-1 { animation: float-tile-1 7s ease-in-out infinite; }
+.float-tile-2 { animation: float-tile-2 9s ease-in-out infinite 1s; }
+.float-tile-3 { animation: float-tile-3 6s ease-in-out infinite 2s; }
+.float-tile-4 { animation: float-tile-4 8s ease-in-out infinite 0.5s; }
+
+/* ─── Interactive Buttons — Osmo pill system ─── */
+.btn-volt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #a1ff62;
+  color: #201d1d;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 26px;
+  border-radius: 1600px;
+  border: 1.5px solid #201d1d;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(161, 255, 98, 0.22);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+  letter-spacing: -0.01em;
+}
+
+.btn-volt:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 28px rgba(161, 255, 98, 0.45);
+}
+
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #201d1d;
+  color: #f5f3f0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 26px;
+  border-radius: 1600px;
+  border: 1.5px solid #312e2e;
+  text-decoration: none;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.btn-ink:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: #312e2e;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: #201d1d;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 1600px;
+  border: 1.5px solid rgba(32, 29, 29, 0.28);
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, background 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.btn-outline:hover {
+  transform: translateY(-2px);
+  border-color: #201d1d;
+  background: rgba(32, 29, 29, 0.04);
+}
+
+/* ─── Scroll Reveal Classes ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── Marquee Animation ─── */
+@keyframes scroll-strip {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scroll-strip-reverse {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.marquee-strip {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: scroll-strip 28s linear infinite;
+}
+
+.marquee-strip-reverse {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: scroll-strip-reverse 22s linear infinite;
+}
+
+.marquee-strip:hover,
+.marquee-strip-reverse:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Flip Words ─── */
+@keyframes flip-in {
+  from { transform: perspective(400px) rotateX(-90deg); opacity: 0; }
+  to   { transform: perspective(400px) rotateX(0); opacity: 1; }
+}
+
+@keyframes flip-out {
+  from { transform: perspective(400px) rotateX(0); opacity: 1; }
+  to   { transform: perspective(400px) rotateX(90deg); opacity: 0; }
+}
+
+.flip-in  { animation: flip-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.flip-out { animation: flip-out 0.3s ease-in forwards; }
+
+/* ─── Hero Name Glow ─── */
+.hero-name-glow {
+  transition: color 0.35s ease, text-shadow 0.35s ease;
+}
+
+.hero-name-glow:hover {
+  color: #f84131;
+  text-shadow: 0 0 28px rgba(248, 65, 49, 0.28);
+}
+
+/* ─── Character Split Animation ─── */
+.char-split-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.char-split {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ─── Card 3D Tilt ─── */
+.card-tilt {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ─── Skills Fan Stack ─── */
+.skill-fan-container {
+  position: relative;
+  width: 100%;
+}
+
+.skill-fan-item {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s ease;
+}
+
+/* ─── Timeline Draw ─── */
+.timeline-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.timeline-line.drawn {
+  stroke-dashoffset: 0;
+}
+
+/* ─── Counter Number ─── */
+.counter-num {
+  font-variant-numeric: tabular-nums;
+  will-change: contents;
+}
+
+/* ─── Education Photo Card ─── */
+.edu-photo-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+}
+
+.edu-photo-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0.55) 50%,
+      rgba(0, 0, 0, 0.92) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.edu-photo-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+}
+
+.edu-photo-card .card-content {
+  position: relative;
+  z-index: 2;
+  padding: 28px 26px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* ─── Section Label Badge — Osmo volt pill ─── */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 16px;
+  background: var(--color-volt);
+  color: #201d1d;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 1600px;
+}
+
+.section-badge-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 16px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ─── Interactive Card Lift ─── */
+.interactive-card {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.12);
+}
+
+/* ─── Grain Texture Overlay ─── */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.022;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Accordion ─── */
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+
+/* ─── Glowing dot pulse ─── */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px #a1ff62, 0 0 0 0 rgba(161, 255, 98, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 10px #a1ff62, 0 0 0 5px rgba(161, 255, 98, 0);
+  }
+}
+
+.pulse-dot {
+  animation: pulse-glow 2.2s ease-in-out infinite;
+}
+
+/* ─── Antimetal-inspired Dashed Section Divider ─── */
+.section-hairline {
+  border: none;
+  border-top: 1px dashed rgba(32, 29, 29, 0.1);
+  margin: 0;
+  width: 100%;
+}
+
+.section-hairline-white {
+  border: none;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  margin: 0;
+  width: 100%;
+}
+
+/* ─── Osmo Scattered bg words (no numbers, only text) ─── */
+.bg-scatter-word {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(80px, 12vw, 180px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* ─── Responsive: Education cards ─── */
+@media (max-width: 820px) {
+  #education [style*="grid-template-columns: repeat(3"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  #education .edu-photo-card {
+    height: 280px !important;
+  }
+}
+
+/* ─── Responsive: Project architecture grid ─── */
+@media (max-width: 768px) {
+  #projects [style*="grid-template-columns: minmax(0, 1.5fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  #projects [style*="grid-template-columns: minmax(0, 1.3fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}

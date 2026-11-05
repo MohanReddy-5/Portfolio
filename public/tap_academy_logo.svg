@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+  <rect width="200" height="120" fill="#f0f5ff" rx="8"/>
+  <!-- TAP large letters -->
+  <text x="100" y="56" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="44" fill="#1a56db" letter-spacing="-2">TAP</text>
+  <!-- ACADEMY smaller below -->
+  <text x="100" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="20" fill="#003d82" letter-spacing="3">ACADEMY</text>
+  <!-- Small dot/circle accent on D in ACADEMY (matching logo style) -->
+  <circle cx="118" cy="83" r="4" fill="#1a56db" opacity="0.4"/>
+</svg>

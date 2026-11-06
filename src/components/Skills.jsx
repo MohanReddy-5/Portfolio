@@ -230,7 +230,7 @@ function MagneticTechItem({
                 <TechIcon
                     size={28}
                     style={{
-                        color: isFocused ? tech.color : 'rgba(255,255,255,0.55)',
+                        color: isFocused ? tech.color : 'rgba(13,13,13,0.55)',
                         filter: isFocused
                             ? `drop-shadow(0 0 10px ${tech.color}70) drop-shadow(0 0 20px ${tech.color}35)`
                             : 'none',
@@ -246,9 +246,9 @@ function MagneticTechItem({
                     fontWeight: 700,
                     fontSize: 'clamp(21px, 2.3vw, 28px)',
                     letterSpacing: '-0.035em',
-                    color: isFocused ? '#ffffff' : 'rgba(255,255,255,0.72)',
+                    color: isFocused ? '#0d0d0d' : 'rgba(13,13,13,0.72)',
                     textShadow: isFocused
-                        ? `0 0 18px ${tech.color}40, 0 1px 3px rgba(0,0,0,0.9)`
+                        ? `0 0 18px ${tech.color}40`
                         : 'none',
                     transition: 'color 0.14s ease, text-shadow 0.14s ease',
                     lineHeight: 1.1,
@@ -267,9 +267,9 @@ function MagneticTechItem({
                         fontWeight: 700,
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase',
-                        color: isFocused ? tech.color : 'rgba(255,255,255,0.35)',
-                        background: isFocused ? `${tech.color}18` : 'rgba(255,255,255,0.06)',
-                        border: `1px solid ${isFocused ? `${tech.color}40` : 'rgba(255,255,255,0.10)'}`,
+                        color: isFocused ? tech.color : 'rgba(13,13,13,0.35)',
+                        background: isFocused ? `${tech.color}18` : 'rgba(13,13,13,0.06)',
+                        border: `1px solid ${isFocused ? `${tech.color}40` : 'rgba(13,13,13,0.10)'}`,
                         padding: '2px 7px',
                         borderRadius: '1600px',
                         transition: 'all 0.14s ease',
@@ -387,13 +387,13 @@ export default function Skills() {
             id="skills"
             ref={sectionRef}
             style={{
-                background: '#0f0e0e',
-                color: '#ffffff',
+                background: 'var(--color-linen-canvas)',
+                color: '#0d0d0d',
                 padding: '110px 0 130px',
                 position: 'relative',
                 overflow: 'hidden',
-                borderTop: '1px dashed rgba(255,255,255,0.08)',
-                borderBottom: '1px dashed rgba(255,255,255,0.08)',
+                borderTop: '1px dashed rgba(13,13,13,0.10)',
+                borderBottom: '1px dashed rgba(13,13,13,0.10)',
             }}
         >
             <div
@@ -414,7 +414,7 @@ export default function Skills() {
                             fontWeight: 700,
                             letterSpacing: '0.12em',
                             textTransform: 'uppercase',
-                            color: 'rgba(255,255,255,0.38)',
+                            color: 'rgba(13,13,13,0.38)',
                             display: 'block',
                             marginBottom: '20px',
                         }}
@@ -427,7 +427,7 @@ export default function Skills() {
                             fontFamily: 'var(--font-display)',
                             fontWeight: 800,
                             fontSize: 'clamp(2.8rem, 5.2vw, 4.8rem)',
-                            color: '#ffffff',
+                            color: '#0d0d0d',
                             lineHeight: 0.95,
                             letterSpacing: '-0.05em',
                             margin: 0,
@@ -435,7 +435,7 @@ export default function Skills() {
                         }}
                     >
                         Tools I build with.<br />
-                        <span style={{ color: 'rgba(255,255,255,0.28)' }}>
+                        <span style={{ color: 'rgba(13,13,13,0.30)' }}>
                             The technologies behind the work.
                         </span>
                     </h2>
@@ -472,7 +472,7 @@ export default function Skills() {
                                     fontFamily: 'var(--font-display)',
                                     fontWeight: 900,
                                     fontSize: 'clamp(72px, 14vw, 170px)',
-                                    color: 'rgba(255,255,255,0.022)',
+                                    color: 'rgba(13,13,13,0.03)',
                                     lineHeight: 0.85,
                                     letterSpacing: '-0.05em',
                                     pointerEvents: 'none',
@@ -492,7 +492,7 @@ export default function Skills() {
                                     alignItems: 'baseline',
                                     justifyContent: 'space-between',
                                     paddingBottom: '14px',
-                                    borderBottom: '1px dashed rgba(255,255,255,0.08)',
+                                    borderBottom: '1px dashed rgba(13,13,13,0.10)',
                                     position: 'relative',
                                     zIndex: 1,
                                 }}
@@ -504,7 +504,7 @@ export default function Skills() {
                                         fontWeight: 700,
                                         letterSpacing: '0.12em',
                                         textTransform: 'uppercase',
-                                        color: 'rgba(255,255,255,0.45)',
+                                        color: 'rgba(13,13,13,0.45)',
                                     }}
                                 >
                                     {area.index} / {area.label}

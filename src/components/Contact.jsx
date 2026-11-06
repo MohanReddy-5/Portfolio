@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { FiArrowUpRight, FiCheck, FiSend, FiAlertCircle, FiMail, FiLinkedin, FiGithub, FiMessageSquare } from 'react-icons/fi';
+import { FiArrowUpRight, FiCheck, FiSend, FiAlertCircle, FiX } from 'react-icons/fi';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -58,28 +58,53 @@ function CustomRocket({ rocketRef, isLaunching }) {
     );
 }
 
+/* ── Contact node logos as inline SVGs (prominent, ~40-48px) ── */
+function LinkedInLogo({ size = 44 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+        </svg>
+    );
+}
+
+function GitHubLogo({ size = 44 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+        </svg>
+    );
+}
+
+function EmailLogo({ size = 44 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="M22 4L12 13L2 4" />
+        </svg>
+    );
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
-   CONTACT — Hub-and-spoke architectural network
-   Central "LET'S CONNECT." hub with four orthogonal branches:
-   EMAIL (upper-left) · LINKEDIN (upper-right)
-   GITHUB (lower-left) · SEND MESSAGE (lower-right → integrated form)
+   CONTACT — Hub-and-spoke network with 3 prominent contact nodes
+   Central "LET'S CONNECT." hub → LinkedIn, Email, GitHub
+   "Send a Message" action integrated with Email node
    ───────────────────────────────────────────────────────────────────────────── */
 export default function Contact() {
-    const sectionRef        = useRef(null);
-    const hubRef            = useRef(null);
-    const svgRef            = useRef(null);
-    const pathRefs          = useRef([]);   /* [email, linkedin, github, message] */
-    const dotRefs           = useRef([]);
-    const endpointRefs      = useRef([]);
-    const rocketRef         = useRef(null);
-    const formContainerRef  = useRef(null);
+    const sectionRef       = useRef(null);
+    const hubRef           = useRef(null);
+    const svgRef           = useRef(null);
+    const pathRefs         = useRef([]);
+    const nodeRefs         = useRef([]);
+    const rocketRef        = useRef(null);
+    const formFirstInput   = useRef(null);
 
-    const [form, setForm]               = useState({ name: '', email: '', message: '' });
-    const [status, setStatus]           = useState('idle');
+    const [form, setForm]                 = useState({ name: '', email: '', message: '' });
+    const [status, setStatus]             = useState('idle');
     const [errorMessage, setErrorMessage] = useState('');
-    const [isLaunching, setIsLaunching] = useState(false);
-    const [hoveredEndpoint, setHoveredEndpoint] = useState(null);
-    const [isMobile, setIsMobile]       = useState(false);
+    const [isLaunching, setIsLaunching]   = useState(false);
+    const [hoveredNode, setHoveredNode]   = useState(null);
+    const [showForm, setShowForm]         = useState(false);
+    const [isMobile, setIsMobile]         = useState(false);
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth < 768);
@@ -87,6 +112,12 @@ export default function Contact() {
         window.addEventListener('resize', check);
         return () => window.removeEventListener('resize', check);
     }, []);
+
+    useEffect(() => {
+        if (showForm && formFirstInput.current) {
+            formFirstInput.current.focus();
+        }
+    }, [showForm]);
 
     const handleChange = (key) => (e) => {
         setForm((prev) => ({ ...prev, [key]: e.target.value }));
@@ -136,16 +167,16 @@ export default function Contact() {
         setStatus('sent'); triggerRocketFlight(); setForm({ name: '', email: '', message: '' });
     };
 
-    /* ── SVG path drawing entrance animation ── */
+    /* ── SVG entrance animation ── */
     useEffect(() => {
-        if (!sectionRef.current || !svgRef.current) return;
+        if (!sectionRef.current) return;
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         const ctx = gsap.context(() => {
             /* Hub heading */
             if (hubRef.current) {
                 gsap.from(hubRef.current, {
-                    y: 20, opacity: 0, duration: 0.6, ease: 'power3.out',
+                    y: 24, opacity: 0, scale: 0.92, duration: 0.7, ease: 'power3.out',
                     scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
                 });
             }
@@ -159,29 +190,19 @@ export default function Contact() {
                         gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
                         gsap.to(path, {
                             strokeDashoffset: 0,
-                            duration: 0.75, ease: 'power2.inOut',
-                            delay: i * 0.1,
+                            duration: 0.9, ease: 'power2.inOut',
+                            delay: 0.3 + i * 0.12,
                             scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' },
                         });
                     } catch (_) { /* SVG method may not be available yet */ }
                 });
 
-                /* Junction dots */
-                dotRefs.current.forEach((dot, i) => {
-                    if (!dot) return;
-                    gsap.from(dot, {
-                        opacity: 0, scale: 0, duration: 0.3, ease: 'back.out(2)',
-                        delay: 0.3 + i * 0.05,
-                        scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' },
-                    });
-                });
-
-                /* Endpoint labels */
-                endpointRefs.current.forEach((el, i) => {
+                /* Node containers */
+                nodeRefs.current.forEach((el, i) => {
                     if (!el) return;
                     gsap.from(el, {
-                        opacity: 0, y: 10, duration: 0.4, ease: 'power2.out',
-                        delay: 0.4 + i * 0.1,
+                        opacity: 0, y: 16, scale: 0.9, duration: 0.5, ease: 'back.out(1.4)',
+                        delay: 0.6 + i * 0.12,
                         scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' },
                     });
                 });
@@ -207,72 +228,54 @@ export default function Contact() {
     const handleFocus = (e) => { e.target.style.borderBottomColor = '#a1ff62'; };
     const handleBlur  = (e) => { e.target.style.borderBottomColor = 'rgba(255,255,255,0.14)'; };
 
-    /* ── Endpoint data ── */
-    const ENDPOINTS = [
-        {
-            key: 'email',
-            label: 'EMAIL',
-            value: 'mohandharmala5@gmail.com',
-            href: 'mailto:mohandharmala5@gmail.com',
-            Icon: FiMail,
-            region: 'upper-left',
-        },
+    /* ── Contact nodes ── */
+    const NODES = [
         {
             key: 'linkedin',
             label: 'LINKEDIN',
             value: 'mohan-reddy-tech',
             href: 'https://linkedin.com/in/mohan-reddy-tech',
-            Icon: FiLinkedin,
-            region: 'upper-right',
+            Logo: LinkedInLogo,
+            angle: 225, // lower-left
+        },
+        {
+            key: 'email',
+            label: 'EMAIL',
+            value: 'mohandharmala5@gmail.com',
+            href: 'mailto:mohandharmala5@gmail.com',
+            Logo: EmailLogo,
+            angle: 0, // right
         },
         {
             key: 'github',
             label: 'GITHUB',
             value: 'MohanReddy-5',
             href: 'https://github.com/MohanReddy-5',
-            Icon: FiGithub,
-            region: 'lower-left',
-        },
-        {
-            key: 'message',
-            label: 'SEND MESSAGE',
-            value: 'Direct to inbox',
-            href: '#contact-form',
-            Icon: FiMessageSquare,
-            region: 'lower-right',
+            Logo: GitHubLogo,
+            angle: 135, // lower-right (from center)
         },
     ];
 
-    /* ── Connector path data (viewBox 0 0 1000 480) ──
-       Hub center: 500, 240
-       Left junction: 300, 240 — turns up/down to endpoints at x=40
-       Right junction: 700, 240 — turns up/down to endpoints at x=960
-    */
-    const PATHS = [
-        { key: 'email',    d: 'M500,240 H300 V110 H40' },
-        { key: 'linkedin', d: 'M500,240 H300 V370 H40' },
-        { key: 'github',   d: 'M500,240 H700 V110 H960' },
-        { key: 'message',  d: 'M500,240 H700 V370 H960' },
+    /* ── Desktop layout positions (viewBox 0 0 1000 520) ── */
+    const HUB = { x: 500, y: 240 };
+    const NODE_POS = [
+        { x: 120, y: 380 },   // LinkedIn — lower-left
+        { x: 880, y: 180 },   // Email — upper-right
+        { x: 880, y: 420 },   // GitHub — lower-right
     ];
 
-    /* Junction dot positions in SVG coords */
-    const DOTS = [
-        { cx: 500, cy: 240, r: 5 },    /* center */
-        { cx: 300, cy: 240, r: 3 },    /* left junction */
-        { cx: 700, cy: 240, r: 3 },    /* right junction */
-        { cx: 300, cy: 110, r: 3 },    /* email turn */
-        { cx: 300, cy: 370, r: 3 },    /* linkedin turn */
-        { cx: 700, cy: 110, r: 3 },    /* github turn */
-        { cx: 700, cy: 370, r: 3 },    /* message turn */
+    /* Curved connector paths */
+    const CONNECTOR_PATHS = [
+        `M${HUB.x},${HUB.y} C${HUB.x - 160},${HUB.y + 30} ${NODE_POS[0].x + 120},${NODE_POS[0].y - 50} ${NODE_POS[0].x},${NODE_POS[0].y}`,
+        `M${HUB.x},${HUB.y} C${HUB.x + 120},${HUB.y - 50} ${NODE_POS[1].x - 140},${NODE_POS[1].y + 20} ${NODE_POS[1].x},${NODE_POS[1].y}`,
+        `M${HUB.x},${HUB.y} C${HUB.x + 140},${HUB.y + 60} ${NODE_POS[2].x - 120},${NODE_POS[2].y - 30} ${NODE_POS[2].x},${NODE_POS[2].y}`,
     ];
 
-    /* Endpoint label positions as % of diagram container */
-    const LABEL_POSITIONS = {
-        'upper-left':  { left: '0',   top: '12%',  textAlign: 'left'  },
-        'upper-right': { right: '0',  top: '12%',  textAlign: 'right' },
-        'lower-left':  { left: '0',   bottom: '12%', textAlign: 'left' },
-        'lower-right': { right: '0',  bottom: '12%', textAlign: 'right' },
-    };
+    /* Convert SVG coords to percentage positions for DOM overlays */
+    const toPercent = (pos) => ({
+        left: `${(pos.x / 1000) * 100}%`,
+        top: `${(pos.y / 520) * 100}%`,
+    });
 
     return (
         <section
@@ -304,22 +307,20 @@ export default function Contact() {
                 </span>
 
                 {/* ══════════════════════════════════════════════════════
-                    DESKTOP: Hub-and-spoke network diagram
+                    DESKTOP: Hub-and-spoke network
                     ═════════════════════════════════════════════════════ */}
                 {!isMobile ? (
-                    <div
-                        style={{
-                            position: 'relative',
-                            width: '100%',
-                            height: 'clamp(340px, 44vw, 480px)',
-                            marginBottom: 'clamp(40px, 5vh, 64px)',
-                        }}
-                    >
-                        {/* SVG connector layer — behind all DOM elements */}
+                    <div style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: 'clamp(380px, 48vw, 520px)',
+                        marginBottom: showForm ? '24px' : 'clamp(40px, 5vh, 64px)',
+                    }}>
+                        {/* SVG connector layer */}
                         <svg
                             ref={svgRef}
-                            viewBox="0 0 1000 480"
-                            preserveAspectRatio="none"
+                            viewBox="0 0 1000 520"
+                            preserveAspectRatio="xMidYMid meet"
                             style={{
                                 position: 'absolute',
                                 inset: 0,
@@ -330,31 +331,33 @@ export default function Contact() {
                                 overflow: 'visible',
                             }}
                         >
-                            {/* Connector paths */}
-                            {PATHS.map((p, i) => {
-                                const isActive = hoveredEndpoint === p.key;
+                            {/* Connector curves */}
+                            {CONNECTOR_PATHS.map((d, i) => {
+                                const isActive = hoveredNode === NODES[i].key;
                                 return (
                                     <path
-                                        key={p.key}
+                                        key={NODES[i].key}
                                         ref={(el) => { pathRefs.current[i] = el; }}
-                                        d={p.d}
+                                        d={d}
                                         fill="none"
-                                        stroke={isActive ? 'rgba(255,255,255,0.60)' : 'rgba(255,255,255,0.13)'}
+                                        stroke={isActive ? 'rgba(161,255,98,0.45)' : 'rgba(255,255,255,0.10)'}
                                         strokeWidth={isActive ? '1.5' : '1'}
-                                        style={{ transition: 'stroke 0.2s ease, stroke-width 0.2s ease' }}
+                                        style={{ transition: 'stroke 0.25s ease, stroke-width 0.25s ease' }}
                                     />
                                 );
                             })}
 
-                            {/* Junction dots */}
-                            {DOTS.map((dot, i) => (
+                            {/* Hub dot */}
+                            <circle cx={HUB.x} cy={HUB.y} r="5" fill="rgba(161,255,98,0.35)" />
+                            <circle cx={HUB.x} cy={HUB.y} r="2" fill="#a1ff62" />
+
+                            {/* Node endpoint dots */}
+                            {NODE_POS.map((pos, i) => (
                                 <circle
                                     key={i}
-                                    ref={(el) => { dotRefs.current[i] = el; }}
-                                    cx={dot.cx}
-                                    cy={dot.cy}
-                                    r={dot.r}
-                                    fill="rgba(255,255,255,0.25)"
+                                    cx={pos.x} cy={pos.y} r="3"
+                                    fill={hoveredNode === NODES[i].key ? '#a1ff62' : 'rgba(255,255,255,0.20)'}
+                                    style={{ transition: 'fill 0.25s ease' }}
                                 />
                             ))}
                         </svg>
@@ -364,8 +367,8 @@ export default function Contact() {
                             ref={hubRef}
                             style={{
                                 position: 'absolute',
-                                left: '50%',
-                                top: '50%',
+                                left: `${(HUB.x / 1000) * 100}%`,
+                                top: `${(HUB.y / 520) * 100}%`,
                                 transform: 'translate(-50%, -50%)',
                                 textAlign: 'center',
                                 zIndex: 4,
@@ -375,10 +378,10 @@ export default function Contact() {
                             <h2 style={{
                                 fontFamily: 'var(--font-display)',
                                 fontWeight: 800,
-                                fontSize: 'clamp(2.4rem, 5vw, 4rem)',
+                                fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
                                 lineHeight: 0.9,
                                 letterSpacing: '-0.04em',
-                                margin: '0 0 10px',
+                                margin: '0 0 8px',
                                 whiteSpace: 'nowrap',
                             }}>
                                 <span style={{ color: '#ffffff' }}>LET'S </span>
@@ -397,70 +400,130 @@ export default function Contact() {
                             </p>
                         </div>
 
-                        {/* Endpoint labels — absolutely positioned in diagram */}
-                        {ENDPOINTS.map((ep, i) => {
-                            const pos     = LABEL_POSITIONS[ep.region];
-                            const isActive = hoveredEndpoint === ep.key;
-                            const isMsg   = ep.key === 'message';
+                        {/* ── Contact node cards ── */}
+                        {NODES.map((node, i) => {
+                            const pos = toPercent(NODE_POS[i]);
+                            const isActive = hoveredNode === node.key;
+                            const isEmail = node.key === 'email';
+                            const alignRight = NODE_POS[i].x > 500;
 
                             return (
-                                <a
-                                    key={ep.key}
-                                    ref={(el) => { endpointRefs.current[i] = el; }}
-                                    href={ep.href}
-                                    target={ep.href.startsWith('http') ? '_blank' : undefined}
-                                    rel={ep.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    onClick={isMsg ? (e) => {
-                                        e.preventDefault();
-                                        document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                    } : undefined}
-                                    onMouseEnter={() => setHoveredEndpoint(ep.key)}
-                                    onMouseLeave={() => setHoveredEndpoint(null)}
+                                <div
+                                    key={node.key}
+                                    ref={(el) => { nodeRefs.current[i] = el; }}
+                                    onMouseEnter={() => setHoveredNode(node.key)}
+                                    onMouseLeave={() => setHoveredNode(null)}
                                     style={{
                                         position: 'absolute',
                                         ...pos,
+                                        transform: alignRight
+                                            ? 'translate(-10%, -50%)'
+                                            : 'translate(-90%, -50%)',
                                         zIndex: 5,
-                                        textDecoration: 'none',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: '4px',
-                                        alignItems: ep.region.includes('right') ? 'flex-end' : 'flex-start',
-                                        transition: 'opacity 0.2s ease',
-                                        maxWidth: '220px',
+                                        alignItems: alignRight ? 'flex-start' : 'flex-end',
+                                        gap: '10px',
                                     }}
                                 >
-                                    {/* Label chip */}
-                                    <span style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        fontFamily: 'var(--font-mono)',
-                                        fontSize: '10.5px',
-                                        fontWeight: 700,
-                                        letterSpacing: '0.10em',
-                                        textTransform: 'uppercase',
-                                        color: isActive ? '#a1ff62' : 'rgba(255,255,255,0.55)',
-                                        transition: 'color 0.2s ease',
-                                    }}>
-                                        <ep.Icon size={12} />
-                                        {ep.label}
-                                        <FiArrowUpRight size={11} style={{ opacity: isActive ? 1 : 0.4 }} />
-                                    </span>
-                                    {/* Value */}
-                                    <span style={{
-                                        fontFamily: 'var(--font-body)',
-                                        fontSize: '12px',
-                                        color: isActive ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.28)',
-                                        letterSpacing: '0.01em',
-                                        transition: 'color 0.2s ease',
-                                        maxWidth: '200px',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                    }}>
-                                        {ep.value}
-                                    </span>
-                                </a>
+                                    {/* Logo circle + label row */}
+                                    <a
+                                        href={node.href}
+                                        target={node.href.startsWith('http') ? '_blank' : undefined}
+                                        rel={node.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '14px',
+                                            textDecoration: 'none',
+                                            flexDirection: alignRight ? 'row' : 'row-reverse',
+                                        }}
+                                    >
+                                        {/* Prominent logo circle */}
+                                        <div style={{
+                                            width: 64,
+                                            height: 64,
+                                            borderRadius: '50%',
+                                            background: isActive ? 'rgba(161,255,98,0.10)' : 'rgba(255,255,255,0.04)',
+                                            border: `1.5px solid ${isActive ? 'rgba(161,255,98,0.35)' : 'rgba(255,255,255,0.10)'}`,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: isActive ? '#a1ff62' : 'rgba(255,255,255,0.50)',
+                                            transition: 'all 0.25s ease',
+                                            flexShrink: 0,
+                                        }}>
+                                            <node.Logo size={28} />
+                                        </div>
+
+                                        {/* Label + value */}
+                                        <div style={{ textAlign: alignRight ? 'left' : 'right' }}>
+                                            <span style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                fontFamily: 'var(--font-mono)',
+                                                fontSize: '11px',
+                                                fontWeight: 700,
+                                                letterSpacing: '0.10em',
+                                                textTransform: 'uppercase',
+                                                color: isActive ? '#a1ff62' : 'rgba(255,255,255,0.55)',
+                                                transition: 'color 0.25s ease',
+                                                justifyContent: alignRight ? 'flex-start' : 'flex-end',
+                                                marginBottom: '3px',
+                                            }}>
+                                                {node.label}
+                                                <FiArrowUpRight size={11} style={{ opacity: isActive ? 1 : 0.4, transition: 'opacity 0.25s' }} />
+                                            </span>
+                                            <span style={{
+                                                fontFamily: 'var(--font-body)',
+                                                fontSize: '12.5px',
+                                                color: isActive ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.28)',
+                                                letterSpacing: '0.01em',
+                                                transition: 'color 0.25s ease',
+                                                display: 'block',
+                                                maxWidth: '220px',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                            }}>
+                                                {node.value}
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                    {/* "Send a Message" button — attached to Email node */}
+                                    {isEmail && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowForm(!showForm)}
+                                            style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                background: showForm ? 'rgba(255,255,255,0.06)' : 'transparent',
+                                                border: `1px solid ${showForm ? 'rgba(161,255,98,0.30)' : 'rgba(255,255,255,0.12)'}`,
+                                                borderRadius: '1600px',
+                                                padding: '8px 18px',
+                                                fontFamily: 'var(--font-mono)',
+                                                fontSize: '10.5px',
+                                                fontWeight: 700,
+                                                letterSpacing: '0.06em',
+                                                textTransform: 'uppercase',
+                                                color: showForm ? '#a1ff62' : 'rgba(255,255,255,0.50)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.25s ease',
+                                                marginLeft: alignRight ? '78px' : 0,
+                                                marginRight: alignRight ? 0 : '78px',
+                                            }}
+                                            onMouseEnter={(e) => { if (!showForm) { e.currentTarget.style.borderColor = 'rgba(161,255,98,0.30)'; e.currentTarget.style.color = '#a1ff62'; } }}
+                                            onMouseLeave={(e) => { if (!showForm) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.50)'; } }}
+                                        >
+                                            <FiSend size={11} />
+                                            {showForm ? 'Close Form' : 'Send a Message'}
+                                        </button>
+                                    )}
+                                </div>
                             );
                         })}
                     </div>
@@ -487,14 +550,14 @@ export default function Contact() {
                             Mohan Reddy
                         </p>
 
-                        {/* Vertical endpoint list — exclude "message" (form is below) */}
+                        {/* Vertical endpoint list */}
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            {ENDPOINTS.filter(ep => ep.key !== 'message').map((ep, i) => (
+                            {NODES.map((node) => (
                                 <a
-                                    key={ep.key}
-                                    href={ep.href}
-                                    target={ep.href.startsWith('http') ? '_blank' : undefined}
-                                    rel={ep.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                    key={node.key}
+                                    href={node.href}
+                                    target={node.href.startsWith('http') ? '_blank' : undefined}
+                                    rel={node.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -508,48 +571,96 @@ export default function Contact() {
                                     onMouseEnter={(e) => e.currentTarget.style.color = '#a1ff62'}
                                     onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.60)'}
                                 >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <ep.Icon size={14} />
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <node.Logo size={20} />
                                         <span style={{
                                             fontFamily: 'var(--font-mono)', fontSize: '11px',
                                             fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                                        }}>{ep.label}</span>
+                                        }}>{node.label}</span>
                                     </div>
                                     <span style={{
                                         fontFamily: 'var(--font-body)', fontSize: '12px',
                                         color: 'rgba(255,255,255,0.30)', maxWidth: '160px',
                                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                                    }}>{ep.value}</span>
+                                    }}>{node.value}</span>
                                 </a>
                             ))}
                         </div>
+
+                        {/* Mobile: Send Message toggle */}
+                        <button
+                            type="button"
+                            onClick={() => setShowForm(!showForm)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                marginTop: '24px',
+                                background: 'transparent',
+                                border: '1px solid rgba(255,255,255,0.12)',
+                                borderRadius: '1600px',
+                                padding: '10px 20px',
+                                fontFamily: 'var(--font-mono)',
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                letterSpacing: '0.06em',
+                                textTransform: 'uppercase',
+                                color: showForm ? '#a1ff62' : 'rgba(255,255,255,0.55)',
+                                cursor: 'pointer',
+                                transition: 'all 0.25s ease',
+                            }}
+                        >
+                            <FiSend size={12} />
+                            {showForm ? 'Close Form' : 'Send a Message'}
+                        </button>
                     </div>
                 )}
 
-                {/* ── Integrated message form ─────────────────────────────── */}
+                {/* ── Integrated message form (slides in when showForm is true) ── */}
                 <div
                     id="contact-form"
-                    ref={formContainerRef}
                     style={{
-                        maxWidth: isMobile ? '100%' : '420px',
+                        maxWidth: isMobile ? '100%' : '440px',
                         marginLeft: isMobile ? 0 : 'auto',
                         marginRight: isMobile ? 0 : '0',
                         position: 'relative',
                         overflow: 'visible',
+                        maxHeight: showForm ? '600px' : '0',
+                        opacity: showForm ? 1 : 0,
+                        transition: 'max-height 0.4s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease',
+                        pointerEvents: showForm ? 'auto' : 'none',
                     }}
                 >
-                    {/* Form label */}
-                    <div style={{ marginBottom: '20px' }}>
-                        <span style={{
-                            fontFamily: 'var(--font-mono)', fontSize: '10.5px', fontWeight: 700,
-                            letterSpacing: '0.10em', textTransform: 'uppercase',
-                            color: 'rgba(255,255,255,0.40)', display: 'block', marginBottom: '4px',
-                        }}>
-                            {isMobile ? 'Send a Message' : 'Direct Message'}
-                        </span>
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12.5px', color: 'rgba(255,255,255,0.25)' }}>
-                            Delivers directly to my inbox.
-                        </span>
+                    {/* Form header */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingTop: '8px' }}>
+                        <div>
+                            <span style={{
+                                fontFamily: 'var(--font-mono)', fontSize: '10.5px', fontWeight: 700,
+                                letterSpacing: '0.10em', textTransform: 'uppercase',
+                                color: 'rgba(255,255,255,0.40)', display: 'block', marginBottom: '4px',
+                            }}>
+                                Direct Message
+                            </span>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12.5px', color: 'rgba(255,255,255,0.25)' }}>
+                                Delivers directly to my inbox.
+                            </span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setShowForm(false)}
+                            style={{
+                                width: 28, height: 28, borderRadius: '50%',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.10)',
+                                color: 'rgba(255,255,255,0.40)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                cursor: 'pointer', transition: 'color 0.2s',
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.40)'}
+                        >
+                            <FiX size={13} />
+                        </button>
                     </div>
 
                     {status === 'sent' ? (
@@ -590,6 +701,7 @@ export default function Contact() {
                             <div>
                                 <label style={labelStyle}>Your Name</label>
                                 <input
+                                    ref={formFirstInput}
                                     type="text" required placeholder="Your name"
                                     value={form.name} onChange={handleChange('name')}
                                     style={inputStyle} onFocus={handleFocus} onBlur={handleBlur}

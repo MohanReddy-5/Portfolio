@@ -15,13 +15,12 @@ export default function Hero() {
 
     const fadeUp = (delay = 0) => ({
         initial: { opacity: 0, y: 22 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: '-4%' },
+        animate: { opacity: 1, y: 0 },
         transition: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
     });
 
     return (
-        <section ref={sectionRef} className="hero3-section">
+        <section id="home" ref={sectionRef} className="hero3-section">
             {/* Grain overlay */}
             <div className="grain-overlay" style={{ zIndex: 2 }} />
 
@@ -76,8 +75,7 @@ export default function Hero() {
                 {/* ═══ CENTER — Portrait ═══ */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.97 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: '-4%' }}
+                    animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="hero3-zone-portrait"
                 >
@@ -93,8 +91,7 @@ export default function Hero() {
                 {/* ═══ RIGHT — Molecular Network ═══ */}
                 <motion.div
                     initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true, margin: '-4%' }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="hero3-zone-network"
                 >

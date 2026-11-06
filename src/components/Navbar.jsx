@@ -46,8 +46,8 @@ function MonogramTag({ onClick }) {
 
 const NAV_LINKS = [
     { label: 'About',      href: '#about',      id: 'about' },
-    { label: 'Projects',   href: '#projects',   id: 'projects' },
     { label: 'Skills',     href: '#skills',     id: 'skills' },
+    { label: 'Projects',   href: '#projects',   id: 'projects' },
     { label: 'Experience', href: '#experience', id: 'experience' },
 ];
 
